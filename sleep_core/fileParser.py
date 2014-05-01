@@ -5,7 +5,7 @@ Created on Apr 30, 2014
 import csv
 import os.path as path
 
-from sleep_core.Data import NightSession
+from sleep_core.data import NightSession
 
 _ext = '.csv'
 
@@ -29,6 +29,10 @@ def openFile(filePath):
     return Reader(filePath)
     
 class Reader(object):
+    '''
+    Parses the csv file and separates the data into individual sessions as a
+    list-list.
+    '''
     
     def __init__(self, filePath):
         self.__file = filePath
@@ -66,6 +70,16 @@ class Reader(object):
         
     def getRawData(self):
         return self.__rawData
+    
+    def getSessions(self):
+        '''
+        Returns a list of NightSession objects.
+        '''
+        data = []
+        for raw in self.__rawData:
+            data.append(NightSession(raw))
+        return data
+            
         
         
         
