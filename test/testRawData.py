@@ -4,12 +4,44 @@ Created on Apr 30, 2014
 '''
 import unittest
 import os
+import datetime
 
-#from sleep_core.Data import NightSession
+from sleep_core.data import NightSession
 from sleep_core import fileParser as fp
 
 path = os.path.dirname(__file__)
 fyle = os.path.join(path, 'example-data.csv')
+
+class TestNighSession(unittest.TestCase):
+    
+    def setUp(self):
+        self.sessions = fp.openFile(fyle).getSessions()
+        
+    def testGetID(self):
+        self.assertEqual(self.sessions[0].getID(), 1395982691112)
+        
+    def testGetTimeZone(self):
+        self.assertEqual(self.sessions[0].getTimeZone(), "America/New_York")
+        
+    def testGetStartDate(self):
+        self.assertEqual(self.sessions[0].getStartDate(),
+                         datetime.datetime(2014, 03, 28))
+
+    def testGetStartTime(self):
+        self.assertEqual(self.sessions[0].getStartTime(),
+                         datetime.datetime(2014, 03, 28, 0, 58))
+        
+    def testGetEndDate(self):
+        self.assertEqual(self.sessions[0].getEndDate(),
+                         datetime.datetime(2014, 03, 28))
+        
+    def testGetEndTime(self):
+        self.assertEqual(self.sessions[0].getEndTime(),
+                         datetime.datetime(2014, 03, 28, 9, 37))
+        
+    def testForValidSessionFromParser(self):
+        self.assertIsInstance(self.sessions[0], NightSession)
+
 
 class TestReader(unittest.TestCase):
     
