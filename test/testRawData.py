@@ -16,28 +16,61 @@ class TestNighSession(unittest.TestCase):
     
     def setUp(self):
         self.sessions = fp.openFile(fyle).getSessions()
+        # one - type data that contains sound graph data
+        self.one = self.sessions[0]
+        # two - type data that does not have sound graph data
         
     def testGetID(self):
-        self.assertEqual(self.sessions[0].getID(), 1395982691112)
+        self.assertEqual(self.one.getID(), 1395982691112)
         
     def testGetTimeZone(self):
-        self.assertEqual(self.sessions[0].getTimeZone(), "America/New_York")
+        self.assertEqual(self.one.getTimeZone(), "America/New_York")
         
     def testGetStartDate(self):
-        self.assertEqual(self.sessions[0].getStartDate(),
+        self.assertEqual(self.one.getStartDate(),
                          datetime.datetime(2014, 03, 28))
 
     def testGetStartTime(self):
-        self.assertEqual(self.sessions[0].getStartTime(),
+        self.assertEqual(self.one.getStartTime(),
                          datetime.datetime(2014, 03, 28, 0, 58))
         
     def testGetEndDate(self):
-        self.assertEqual(self.sessions[0].getEndDate(),
+        self.assertEqual(self.one.getEndDate(),
                          datetime.datetime(2014, 03, 28))
         
     def testGetEndTime(self):
-        self.assertEqual(self.sessions[0].getEndTime(),
+        self.assertEqual(self.one.getEndTime(),
                          datetime.datetime(2014, 03, 28, 9, 37))
+        
+    def testGetSched(self):
+        self.assertEqual(self.one.getSched(),
+                         datetime.datetime(2014, 4, 9, 1, 38))
+    def testGetHours(self):
+        self.assertEqual(self.one.getHours(), 8.66)
+        
+    def testGetRating(self):
+        self.assertEqual(self.one.getRating(), 0.9)
+        
+    def testGetComment(self):
+        self.assertEqual(self.one.getComment(), "#comment here")
+        
+    def testGetFrameRate(self):
+        self.assertEqual(self.one.getFrameRate(), 10000)
+        
+    def testGetSnore(self):
+        self.assertEqual(self.one.getSnore(), -1)
+        
+    def testGetNoise(self):
+        self.assertEqual(self.one.getNoise(), 0.043736402)
+        
+    def testGetCycles(self):
+        self.assertEqual(self.one.getCycles(), 5)
+        
+    def testGetDeepSleep(self):
+        self.assertEqual(self.one.getDeepSleep(), 0.40206185)
+        
+    def testGetLenAdjust(self):
+        self.assertEqual(self.one.getLenAdjust(), -9)
         
     def testForValidSessionFromParser(self):
         self.assertIsInstance(self.sessions[0], NightSession)

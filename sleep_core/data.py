@@ -42,6 +42,12 @@ def findTime(rawStamp):
     rawTime = re.search(rTimeStamp, rawStamp).group()
     return rawTime
 
+def cleanTimeStamp(rawStamp):
+    '''
+    Returns a cleaned up time stamp as a string: yyyy-mm-dd hh:mm
+    '''
+    return "%s %s" %(findDate(rawStamp), findTime(rawStamp))
+
 
 class NightSession(object):
     '''
@@ -50,7 +56,7 @@ class NightSession(object):
 
     def __init__(self, raw):
         self.__data = raw
-        self.map = dict(zip(self.__data[0][:13], self.__data[1][:13]))
+        self.map = dict(zip(self.__data[0][:14], self.__data[1][:14]))
 
     def getID(self):
         return int(self.map['Id'])
@@ -61,18 +67,44 @@ class NightSession(object):
     def __helperDate(self, value):
         return parser.parse("%s" %findDate(self.map[value]))
     
-    def __helperTime(self, value):
-        return parser.parse("%s %s" %(self.getStartDate(),
-                                      findTime(self.map[value])))
-        
     def getStartTime(self):
-        return self.__helperTime('From')
+        return parser.parse(cleanTimeStamp(self.map['From']))
         
     def getStartDate(self):
         return self.__helperDate('From')
     
     def getEndTime(self):
-        return self.__helperTime('To')
+        return parser.parse(cleanTimeStamp(self.map['To']))
         
     def getEndDate(self):
         return self.__helperDate('To')
+    
+    def getSched(self):
+        return parser.parse(cleanTimeStamp(self.map['Sched']))
+    
+    def getHours(self):
+        return float(self.map['Hours'])
+    
+    def getRating(self):
+        return float(self.map['Rating'])
+    
+    def getComment(self):
+        return self.map['Comment']
+    
+    def getFrameRate(self):
+        return int(self.map['Framerate'])
+    
+    def getSnore(self):
+        return int(self.map['Snore'])
+    
+    def getNoise(self):
+        return float(self.map['Noise'])
+    
+    def getCycles(self):
+        return int(self.map['Cycles'])
+    
+    def getDeepSleep(self):
+        return float(self.map['DeepSleep'])
+    
+    def getLenAdjust(self):
+        return int(self.map['LenAdjust'])
