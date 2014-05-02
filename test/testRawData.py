@@ -7,7 +7,7 @@ import os
 import datetime
 
 from sleep_core.data import NightSession
-from sleep_core import fileParser as fp
+from sleep_core import file as fp
 
 path = os.path.dirname(__file__)
 fyle = os.path.join(path, 'example-data.csv')
