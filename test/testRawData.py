@@ -73,8 +73,24 @@ class TestNighSession(unittest.TestCase):
         self.assertEqual(self.one.getLenAdjust(), -9)
         
     def testForValidSessionFromParser(self):
-        self.assertIsInstance(self.sessions[0], NightSession)
+        self.assertIsInstance(self.one, NightSession)
 
+    def testBasicGetSleepData(self):
+        '''
+        Test return for the sleep data. Make sure all the of the returned data
+        is valid on the first and last cell.
+        '''
+        data = self.one.getSleepData()
+        # Two rows lists of data
+        self.assertEqual(len(data), 2)
+        # Session should have 98 items in it
+        self.assertEqual(len(data[0])+1, 98)
+        print len(data[0])
+        self.assertEqual(len(data[1])+1, 98)
+        self.assertEqual(data[0][0], datetime.datetime(2014, 3, 28, 1, 3))
+        self.assertEqual(data[0][96], datetime.datetime(2014, 3, 28, 9, 37))
+        self.assertEqual(data[1][0], -0.01)
+        self.assertEqual(data[1][96], 1.7762419)
 
 class TestReader(unittest.TestCase):
     

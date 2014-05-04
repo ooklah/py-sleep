@@ -16,7 +16,7 @@ Created on Apr 30, 2014
 #    Noise,    (amount noise)
 #    Cycles, (number of sleep cycles)
 #    DeepSleep, (percent in float of deep sleep time)
-#     LenAdjust, (??? )
+#    LenAdjust, (??? )
 
 import re
 import datetime
@@ -39,7 +39,10 @@ def findTime(rawStamp):
     a string with hh:mm.
     '''
     rTimeStamp = r'(\d{1,2}:\d{2})'
-    rawTime = re.search(rTimeStamp, rawStamp).group()
+    try:
+        rawTime = re.search(rTimeStamp, rawStamp).group()
+    except AttributeError:
+        return None
     return rawTime
 
 def cleanTimeStamp(rawStamp):
@@ -57,6 +60,10 @@ class NightSession(object):
     def __init__(self, raw):
         self.__data = raw
         self.map = dict(zip(self.__data[0][:14], self.__data[1][:14]))
+        
+        #Start/End Dates as strings yyyy-mm-dd
+        self.__sd = findDate(self.map['From'])
+        self.__ed = findDate(self.map['To'])
 
     def getID(self):
         return int(self.map['Id'])
@@ -64,20 +71,23 @@ class NightSession(object):
     def getTimeZone(self):
         return self.map['Tz']
     
-    def __helperDate(self, value):
-        return parser.parse("%s" %findDate(self.map[value]))
+    def __datify(self, value):
+        '''
+        Returns the given string back as a datetime.datetime object.
+        '''
+        return parser.parse("%s" %value)
     
     def getStartTime(self):
         return parser.parse(cleanTimeStamp(self.map['From']))
         
     def getStartDate(self):
-        return self.__helperDate('From')
+        return self.__datify(self.__sd)
     
     def getEndTime(self):
         return parser.parse(cleanTimeStamp(self.map['To']))
         
     def getEndDate(self):
-        return self.__helperDate('To')
+        return self.__datify(self.__ed)
     
     def getSched(self):
         return parser.parse(cleanTimeStamp(self.map['Sched']))
@@ -108,3 +118,14 @@ class NightSession(object):
     
     def getLenAdjust(self):
         return int(self.map['LenAdjust'])
+    
+    def getSleepData(self):
+        time = []
+        points = []
+        for i in range(14, len(self.__data[0])):
+            t = findTime(self.__data[0][i])
+            if t:
+                time.append(self.__datify("%s %s"%(self.__sd, t)))
+                points.append(float(self.__data[1][i]))
+            
+        return [time, points]
