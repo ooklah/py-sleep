@@ -85,8 +85,8 @@ class TestNighSession(unittest.TestCase):
         self.assertEqual(len(data), 2)
         # Session should have 98 items in it
         self.assertEqual(len(data[0])+1, 98)
-        print len(data[0])
         self.assertEqual(len(data[1])+1, 98)
+        # Verify the start and end cells are what they should be.
         self.assertEqual(data[0][0], datetime.datetime(2014, 3, 28, 1, 3))
         self.assertEqual(data[0][96], datetime.datetime(2014, 3, 28, 9, 37))
         self.assertEqual(data[1][0], -0.01)
